@@ -35,13 +35,16 @@ function PriceChart() {
       wickDownColor: '#ef4444',
     })
 
-    fetch(
-      'https://api.coingecko.com/api/v3/coins/bitcoin/ohlc?vs_currency=usd&days=7'
-    )
-      .then((response) => response.json())
-      .then((data) => {
+    const fetchCandles = async () => {
+      try {
+        const response = await fetch(
+          'https://api.coingecko.com/api/v3/coins/bitcoin/ohlc?vs_currency=usd&days=7'
+        )
+
+        const data = await response.json()
+
         const formattedData = data.map((item) => ({
-          time: Math.floor(item[0] / 1000),
+          time: new Date(item[0]).toISOString().split('T')[0],
           open: item[1],
           high: item[2],
           low: item[3],
@@ -50,12 +53,16 @@ function PriceChart() {
 
         candlestickSeries.setData(formattedData)
         chart.timeScale().fitContent()
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error('Error fetching OHLC data:', error)
-      })
+      }
+    }
+
+    fetchCandles()
 
     const handleResize = () => {
+      if (!chartContainerRef.current) return
+
       chart.applyOptions({
         width: chartContainerRef.current.clientWidth,
       })
@@ -72,6 +79,7 @@ function PriceChart() {
   return (
     <section className="chart-card">
       <h2>Bitcoin 7-Day Candlestick Chart</h2>
+
       <p className="chart-subtitle">
         Green candles show upward movement. Red candles show downward movement.
       </p>
