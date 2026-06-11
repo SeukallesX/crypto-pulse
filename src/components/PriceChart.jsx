@@ -20,6 +20,8 @@ function PriceChart() {
       },
       timeScale: {
         borderColor: 'rgba(148, 163, 184, 0.2)',
+        timeVisible: true,
+        secondsVisible: false,
       },
       rightPriceScale: {
         borderColor: 'rgba(148, 163, 184, 0.2)',
@@ -43,15 +45,18 @@ function PriceChart() {
 
         const data = await response.json()
 
-        const formattedData = data.map((item) => ({
-          time: new Date(item[0]).toISOString().split('T')[0],
-          open: item[1],
-          high: item[2],
-          low: item[3],
-          close: item[4],
-        }))
+        const formattedData = data
+          .map((item) => ({
+            time: Math.floor(item[0] / 1000),
+            open: item[1],
+            high: item[2],
+            low: item[3],
+            close: item[4],
+          }))
+          .sort((a, b) => a.time - b.time)
 
         candlestickSeries.setData(formattedData)
+
         chart.timeScale().fitContent()
       } catch (error) {
         console.error('Error fetching OHLC data:', error)
