@@ -4,6 +4,9 @@ A futuristic cryptocurrency dashboard built with React that provides real-time c
 
 CryptoPulse combines modern Web3-inspired design with live blockchain market analytics to create an engaging and responsive cryptocurrency dashboard experience.
 
+Live Demo:
+https://decentrax.netlify.app/
+
 ---
 
 ## ✨ Features
